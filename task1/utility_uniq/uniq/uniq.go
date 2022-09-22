@@ -42,8 +42,7 @@ func addStr(result []string, opts Options, count int, prevStr string) []string{
 
 func Uniq(strs []string, opts Options) (result []string, err error) {
 	if (opts.count && opts.double || opts.count && opts.unique || opts.double && opts.unique) {
-		Usage()
-		err = errors.New("incorrect usage: incompatible flags")
+		err = errors.New("error: incompatible flags")
 		return
 	}
 	count := 1

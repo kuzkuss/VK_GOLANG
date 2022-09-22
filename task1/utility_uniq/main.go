@@ -20,8 +20,8 @@ func main() {
 	var err error
 
 	if len(flag.Args()) > 2 {
+		fmt.Println(errors.New("error: too many args"))
 		uniq.Usage()
-		fmt.Println(errors.New("incorrect usage: too many args"))
 		return
 	}
 
@@ -58,6 +58,7 @@ func main() {
 
 	if err != nil {
 		fmt.Println(err)
+		uniq.Usage()
 		return
 	}
 
