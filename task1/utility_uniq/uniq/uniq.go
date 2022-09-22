@@ -11,30 +11,32 @@ func Usage() {
 	fmt.Println("Usage: uniq [-c | -d | -u] [-i] [-f num] [-s chars] [input_file [output_file]]")
 }
 
-func min(l int, r int) int {
-	if l > r {
-		return r
-	} else {
-		return l
-	}
-}
-
 func cut(opts Options, str string) string {
 	words := strings.Split(str, " ")
-	words = words[min(opts.fields, len(words)):]
-	resStr := strings.Join(words, " ")
-	return resStr[min(opts.chars, len(resStr)):]
+
+	if opts.fields >= len(words) {
+		return ""
+	}
+
+	resStr := strings.Join(words[opts.fields:], " ")
+
+	if opts.chars >= len(resStr) {
+		return ""
+	}
+
+	return resStr[opts.chars:]
 }
 
 func addStr(result []string, opts Options, count int, prevStr string) []string{
-	if opts.count {
+	switch {
+	case opts.count:
 		prevStr = strconv.Itoa(count) + " " + prevStr
 		result = append(result, prevStr)
-	} else if opts.double && count > 1 {
+	case opts.double && count > 1:
 		result = append(result, prevStr)
-	} else if opts.unique && count == 1{
+	case opts.unique && count == 1:
 		result = append(result, prevStr)
-	} else if !opts.double && !opts.unique && !opts.count {
+	case !opts.double && !opts.unique && !opts.count:
 		result = append(result, prevStr)
 	}
 	return result
