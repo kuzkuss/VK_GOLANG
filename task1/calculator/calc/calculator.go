@@ -6,39 +6,51 @@ import (
 	"strconv"
 	"unicode"
 
-	"github.com/anasteizha/VK_GOLANG/queue"
-	"github.com/anasteizha/VK_GOLANG/stack"
+	"github.com/kuzkuss/VK_GOLANG/queue"
+	"github.com/kuzkuss/VK_GOLANG/stack"
 )
 
-func ToPostfix(expression string) (*queue.Queue, error) {
+func ToPostfix(expression string) (queue.Queue, error) {
 	var err error
-	q := new(queue.Queue)
-	s := new(stack.Stack)
+	q := queue.Queue{}
+	s := stack.Stack{}
+	numRes := ""
 	for _, el := range expression {
 		if unicode.IsDigit(el) {
-			q.Push(el)
-		} else if el == '+' || el == '-' || el == '*' || el == '/' {
-			if s.IsEmpty() || s.Top() == '(' || getPriority(el) >= getPriority(s.Top().(rune)) {
+			numRes += string(el)
+		} else {
+			if numRes != "" {
+				q.Push(numRes)
+			}
+			switch {
+			case el == '+' || el == '-' || el == '*' || el == '/':
+				if s.IsEmpty() || s.Top() == '(' || getPriority(el) >= getPriority(s.Top().(rune)) {
+					s.Push(el)
+				} else if getPriority(el) < getPriority(s.Top().(rune)) {
+					for !s.IsEmpty() && (s.Top() != '(' || getPriority(el) <= getPriority(s.Top().(rune))) {
+						q.Push(s.Top())
+						s.Pop()
+					}
+					s.Push(el)
+				}
+			case el == '(':
 				s.Push(el)
-			} else if getPriority(el) < getPriority(s.Top().(rune)) {
-				for !s.IsEmpty() && (getPriority(el) <= getPriority(s.Top().(rune)) || s.Top() != '(') {
+			case el == ')':
+				for s.Top() != '(' {
 					q.Push(s.Top())
 					s.Pop()
 				}
-				s.Push(el)
-			}
-		} else if el == '(' {
-			s.Push(el)
-		} else if el == ')' {
-			for s.Top() != '(' {
-				q.Push(s.Top())
 				s.Pop()
+			default:
+				err = errors.New("incorrect expression")
+				return q, err
 			}
-			s.Pop()
-		} else {
-			err = errors.New("incorrect expression")
-			return q, err
+			numRes = ""
 		}
+	}
+
+	if numRes != "" {
+		q.Push(numRes)
 	}
 
 	for !s.IsEmpty() {
@@ -49,29 +61,46 @@ func ToPostfix(expression string) (*queue.Queue, error) {
 	return q, err
 }
 
-func Calculate(expr *queue.Queue) (resValue float64, err error) {
-	s := new(stack.Stack)
-	for !expr.IsEmpty() && err == nil {
-		el := expr.Front()
-		expr.Pop()
-		if unicode.IsDigit(el.(rune)) {
-			var digit float64
-			digit, err = strconv.ParseFloat(string(el.(rune)), 64)
-			s.Push(digit)
+func Calculate(expression string) (resValue float64, err error) {
+	postfixExpression, err := ToPostfix(expression)
+	if err != nil {
+		return
+	}
+
+	s := stack.Stack{}
+	for !postfixExpression.IsEmpty() && err == nil {
+		el := postfixExpression.Front()
+		postfixExpression.Pop()
+		if strEl, ok := el.(string); ok {
+			var num float64
+			if num, err = strconv.ParseFloat(strEl, 64); err == nil {
+				s.Push(num)
+			}
 		} else if el == '+' || el == '-' || el == '*' || el == '/' {
-			rightOperand := s.Top()
+			rightOperand, ok := s.Top().(float64)
+			if !ok {
+				err = errors.New("incorrect postfix expression")
+				continue
+			}
 			s.Pop()
-			leftOperand := s.Top()
+			leftOperand, ok := s.Top().(float64)
+			if !ok {
+				err = errors.New("incorrect postfix expression")
+				continue
+			}
 			s.Pop()
 			var res float64
-			res, err = calcOperation(el.(rune), leftOperand.(float64), rightOperand.(float64))
-			s.Push(res)
+			if res, err = calcOperation(el.(rune), leftOperand, rightOperand); err == nil {
+				s.Push(res)
+			}
 		} else {
 			err = errors.New("incorrect postfix expression")
 		}
 	}
 
-	resValue = s.Top().(float64)
+	if err == nil {
+		resValue = s.Top().(float64)
+	}
 	return
 }
 
