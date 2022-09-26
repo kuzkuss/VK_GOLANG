@@ -7,16 +7,16 @@ import (
 )
 
 func TestUniqDefault(t *testing.T) {
-	opts := Options {
-		count: false,
-		double: false,
-		unique: false,
-		fields: 0,
-		chars: 0,
+	opts := Options{
+		count:       false,
+		double:      false,
+		unique:      false,
+		fields:      0,
+		chars:       0,
 		insensitive: false,
 	}
 
-	strs := []string {
+	strs := []string{
 		"I love music.",
 		"I love music.",
 		"I love music.",
@@ -28,7 +28,7 @@ func TestUniqDefault(t *testing.T) {
 		"I love music of Kartik.",
 	}
 
-	expectedRes := []string {
+	expectedRes := []string{
 		"I love music.",
 		"",
 		"I love music of Kartik.",
@@ -38,21 +38,21 @@ func TestUniqDefault(t *testing.T) {
 
 	receivedRes, err := Uniq(strs, opts)
 
+	require.NoError(t, err)
 	require.Equal(t, expectedRes, receivedRes)
-	require.Equal(t, nil, err)
 }
 
 func TestUniqCOption(t *testing.T) {
-	opts := Options {
-		count: true,
-		double: false,
-		unique: false,
-		fields: 0,
-		chars: 0,
+	opts := Options{
+		count:       true,
+		double:      false,
+		unique:      false,
+		fields:      0,
+		chars:       0,
 		insensitive: false,
 	}
 
-	strs := []string {
+	strs := []string{
 		"I love music.",
 		"I love music.",
 		"I love music.",
@@ -64,7 +64,7 @@ func TestUniqCOption(t *testing.T) {
 		"I love music of Kartik.",
 	}
 
-	expectedRes := []string {
+	expectedRes := []string{
 		"3 I love music.",
 		"1 ",
 		"2 I love music of Kartik.",
@@ -74,21 +74,21 @@ func TestUniqCOption(t *testing.T) {
 
 	receivedRes, err := Uniq(strs, opts)
 
+	require.NoError(t, err)
 	require.Equal(t, expectedRes, receivedRes)
-	require.Equal(t, nil, err)
 }
 
 func TestUniqDOption(t *testing.T) {
-	opts := Options {
-		count: false,
-		double: true,
-		unique: false,
-		fields: 0,
-		chars: 0,
+	opts := Options{
+		count:       false,
+		double:      true,
+		unique:      false,
+		fields:      0,
+		chars:       0,
 		insensitive: false,
 	}
 
-	strs := []string {
+	strs := []string{
 		"I love music.",
 		"I love music.",
 		"I love music.",
@@ -100,7 +100,7 @@ func TestUniqDOption(t *testing.T) {
 		"I love music of Kartik.",
 	}
 
-	expectedRes := []string {
+	expectedRes := []string{
 		"I love music.",
 		"I love music of Kartik.",
 		"I love music of Kartik.",
@@ -108,21 +108,21 @@ func TestUniqDOption(t *testing.T) {
 
 	receivedRes, err := Uniq(strs, opts)
 
+	require.NoError(t, err)
 	require.Equal(t, expectedRes, receivedRes)
-	require.Equal(t, nil, err)
 }
 
 func TestUniqUOption(t *testing.T) {
-	opts := Options {
-		count: false,
-		double: false,
-		unique: true,
-		fields: 0,
-		chars: 0,
+	opts := Options{
+		count:       false,
+		double:      false,
+		unique:      true,
+		fields:      0,
+		chars:       0,
 		insensitive: false,
 	}
 
-	strs := []string {
+	strs := []string{
 		"I love music.",
 		"I love music.",
 		"I love music.",
@@ -134,28 +134,28 @@ func TestUniqUOption(t *testing.T) {
 		"I love music of Kartik.",
 	}
 
-	expectedRes := []string {
+	expectedRes := []string{
 		"",
 		"Thanks.",
 	}
 
 	receivedRes, err := Uniq(strs, opts)
 
+	require.NoError(t, err)
 	require.Equal(t, expectedRes, receivedRes)
-	require.Equal(t, nil, err)
 }
 
 func TestUniqIOption(t *testing.T) {
-	opts := Options {
-		count: false,
-		double: false,
-		unique: false,
-		fields: 0,
-		chars: 0,
+	opts := Options{
+		count:       false,
+		double:      false,
+		unique:      false,
+		fields:      0,
+		chars:       0,
 		insensitive: true,
 	}
 
-	strs := []string {
+	strs := []string{
 		"I LOVE MUSIC.",
 		"I love music.",
 		"I LoVe MuSiC.",
@@ -167,7 +167,7 @@ func TestUniqIOption(t *testing.T) {
 		"I love MuSIC of Kartik.",
 	}
 
-	expectedRes := []string {
+	expectedRes := []string{
 		"I LOVE MUSIC.",
 		"",
 		"I love MuSIC of Kartik.",
@@ -177,21 +177,21 @@ func TestUniqIOption(t *testing.T) {
 
 	receivedRes, err := Uniq(strs, opts)
 
+	require.NoError(t, err)
 	require.Equal(t, expectedRes, receivedRes)
-	require.Equal(t, nil, err)
 }
 
 func TestUniqFOption(t *testing.T) {
-	opts := Options {
-		count: false,
-		double: false,
-		unique: false,
-		fields: 1,
-		chars: 0,
+	opts := Options{
+		count:       false,
+		double:      false,
+		unique:      false,
+		fields:      1,
+		chars:       0,
 		insensitive: false,
 	}
 
-	strs := []string {
+	strs := []string{
 		"We love music.",
 		"I love music.",
 		"They love music.",
@@ -201,7 +201,7 @@ func TestUniqFOption(t *testing.T) {
 		"Thanks.",
 	}
 
-	expectedRes := []string {
+	expectedRes := []string{
 		"We love music.",
 		"",
 		"I love music of Kartik.",
@@ -210,21 +210,21 @@ func TestUniqFOption(t *testing.T) {
 
 	receivedRes, err := Uniq(strs, opts)
 
+	require.NoError(t, err)
 	require.Equal(t, expectedRes, receivedRes)
-	require.Equal(t, nil, err)
 }
 
 func TestUniqSOption(t *testing.T) {
-	opts := Options {
-		count: false,
-		double: false,
-		unique: false,
-		fields: 0,
-		chars: 1,
+	opts := Options{
+		count:       false,
+		double:      false,
+		unique:      false,
+		fields:      0,
+		chars:       1,
 		insensitive: false,
 	}
 
-	strs := []string {
+	strs := []string{
 		"I love music.",
 		"A love music.",
 		"C love music.",
@@ -234,7 +234,7 @@ func TestUniqSOption(t *testing.T) {
 		"Thanks.",
 	}
 
-	expectedRes := []string {
+	expectedRes := []string{
 		"I love music.",
 		"",
 		"I love music of Kartik.",
@@ -247,4 +247,3 @@ func TestUniqSOption(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, expectedRes, receivedRes)
 }
-

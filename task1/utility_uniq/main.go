@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 	"errors"
-	"github.com/anasteizha/VK_GOLANG/uniq"
+	"github.com/kuzkuss/VK_GOLANG/uniq"
 )
 
 func main() {
