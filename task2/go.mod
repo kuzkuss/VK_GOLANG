@@ -1,3 +1,3 @@
-module github.com/anasteizha/VK_GOLANG
+module github.com/kuzkuss/VK_GOLANG
 
 go 1.13

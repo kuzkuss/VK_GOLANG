@@ -77,20 +77,22 @@ func main() {
 	}
 }
 
-func readStrings(scanner *bufio.Scanner) (strs []string, err error) {
+func readStrings(scanner *bufio.Scanner) ([]string, error) {
+	strs := make([]string, 0)
 	for scanner.Scan() {
 		strs = append(strs, scanner.Text())
 	}
-	err = scanner.Err()
-	return
+	err := scanner.Err()
+	return strs, err
 }
 
-func writeStrings(writer *bufio.Writer, strs []string) (err error) {
+func writeStrings(writer *bufio.Writer, strs []string) (error) {
+	var err error
 	for _, val := range strs {
 		_, err = writer.WriteString(val + "\n")
 		if err != nil {
 			break
 		}
 	}
-	return
+	return err
 }

@@ -18,10 +18,11 @@ func (s * Stack) Push(value interface{}) {
 	s.data = append(s.data, value)
 }
 
-func (s * Stack) Top() (res interface{}) {
+func (s * Stack) Top() (interface{}) {
+	var res interface{}
 	if !s.IsEmpty() {
 		res = s.data[len(s.data) - 1]
 	}
-	return
+	return res
 }
 

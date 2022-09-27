@@ -42,11 +42,14 @@ func addStr(result []string, opts Options, count int, prevStr string) []string{
 	return result
 }
 
-func Uniq(strs []string, opts Options) (result []string, err error) {
+func Uniq(strs []string, opts Options) ([]string, error) {
+	result := make([]string, 0)
 	if (opts.count && opts.double || opts.count && opts.unique || opts.double && opts.unique) {
-		err = errors.New("error: incompatible flags")
-		return
+		err := errors.New("error: incompatible flags")
+		return result, err
 	}
+
+	var err error
 	count := 1
 	prevString := strs[0]
 	for idx := 1; idx < len(strs); idx++ {
@@ -68,6 +71,6 @@ func Uniq(strs []string, opts Options) (result []string, err error) {
 	}
 	result = addStr(result, opts, count, prevString)
 
-	return
+	return result, err
 }
 

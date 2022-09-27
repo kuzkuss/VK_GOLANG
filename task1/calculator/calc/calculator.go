@@ -10,6 +10,14 @@ import (
 	"github.com/kuzkuss/VK_GOLANG/stack"
 )
 
+const EPS = 1e-07
+
+const (
+	PRIORITY_ADD_DIFF = 1
+	PRIORITY_MUL_DIV = 2
+	DEFAULT_PRIORITY = -1
+)
+
 func ToPostfix(expression string) (queue.Queue, error) {
 	var err error
 	q := queue.Queue{}
@@ -61,10 +69,11 @@ func ToPostfix(expression string) (queue.Queue, error) {
 	return q, err
 }
 
-func Calculate(expression string) (resValue float64, err error) {
+func Calculate(expression string) (float64, error) {
+	resValue := 0.0
 	postfixExpression, err := ToPostfix(expression)
 	if err != nil {
-		return
+		return resValue, err
 	}
 
 	s := stack.Stack{}
@@ -101,11 +110,10 @@ func Calculate(expression string) (resValue float64, err error) {
 	if err == nil {
 		resValue = s.Top().(float64)
 	}
-	return
+	return resValue, err
 }
 
 func calcOperation(op rune, left, right float64) (float64, error) {
-	const EPS = 1e-07
 	switch op {
 	case '+':
 		return left + right, nil
@@ -124,11 +132,6 @@ func calcOperation(op rune, left, right float64) (float64, error) {
 }
 
 func getPriority(op rune) int {
-	const (
-		PRIORITY_ADD_DIFF = 1
-		PRIORITY_MUL_DIV = 2
-		DEFAULT_PRIORITY = -1
-	)
 	switch op {
 	case '+':
 		fallthrough
